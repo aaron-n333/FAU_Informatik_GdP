@@ -1,0 +1,714 @@
+Index: src/hero/Hero.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/hero/Hero.java b/src/hero/Hero.java
+new file mode 100644
+--- /dev/null	
++++ b/src/hero/Hero.java	
+@@ -0,0 +1,105 @@
++package hero;
++
++public class Hero {
++    //Attribute
++    private String name;
++    private int health;
++    private int damage;
++    private Item[] inventory;
++    private int inventorySize;
++
++    //Getter & Setter
++    public String getName() {
++        return name;
++    }
++
++    public int getHealth() {
++        return health;
++    }
++
++    public int getDamage() {
++        return damage;
++    }
++
++    public void setName(String nameInput) {
++        if (nameInput == "") {
++            System.out.println("Der eingegebene Name ist ungültig, ein Name muss aus mindestens 1 Zeichen bestehen.");
++        }
++        else {
++            this.name = nameInput;
++        }
++    }
++
++    //Konstruktor
++    public Hero(String nameK, int healthK, int damageK) {
++        this.name = nameK;
++        this.health = healthK;
++        this.damage = damageK;
++
++        this.inventory = new Item[6];
++    }
++
++    //Konstruktor überladen: individuelle Taschengröße
++    public Hero(String nameK, int healthK, int damageK, int inventorySizeK) {
++        this.name = nameK;
++        this.health = healthK;
++        this.damage = damageK;
++
++        if (inventorySize < 1 || inventorySize > 15) {
++            System.out.println ("Eingegebene Taschengröße ist zu klein/groß. Die Größe muss im Bereich von inklusive 1 bis 15 liegen.");
++        } else {
++            this.inventorySize = inventorySizeK;
++            this.inventory = new Item[inventorySizeK];
++        }
++    }
++
++    //printInfo
++    public void printInfo() {
++        System.out.println("Hero: " + this.name);
++        System.out.println("Health: " + this.health);
++        System.out.println("Damage: " + this.damage);
++    }
++
++    //insertItem
++    public boolean insertItem(Item item) {
++        for (int i = 0; i < inventory.length; i++) {
++            if (inventory[i] == null) {
++                this.inventory[i] = item;
++                System.out.println ("Item " + item.getItemName() + " wurde erfolgreich an Stelle " + i + " im Inventory hinzugefügt.");
++                return true;
++            }
++        }
++        return false;
++    }
++
++    //printEquipment
++    public void printEquipment() {
++        System.out.println("Equipment for '" + name + "':");
++        for (int i = 0; i < inventory.length; i++) {
++            if (inventory[i] != null) {
++                System.out.print("* ");
++                inventory[i].printInfo();
++            }
++        }
++    }
++
++    //getEquippedDamage
++    public int getEquippedDamage() {
++        int damageSum = this.getDamage();
++        for (int i = 0; i < inventory.length; i++) {
++            if (inventory[i] != null) {
++                damageSum += inventory[i].getItemDamage();
++            }
++        }
++        return damageSum;
++    }
++
++    public void attackEquipped(Hero targetHero) {
++        if (targetHero == null) {
++            return;
++        }
++        targetHero.health -= this.getEquippedDamage();
++    }
++}
++
++
+Index: src/hero/Item.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/hero/Item.java b/src/hero/Item.java
+new file mode 100644
+--- /dev/null	
++++ b/src/hero/Item.java	
+@@ -0,0 +1,45 @@
++package hero;
++
++public class Item {
++    //Attribute
++    private String itemName;
++    private int itemDamage;
++    private int itemID;
++    private static int itemIDCounter = 0;
++
++    //Getter
++    public String getItemName () {
++        return itemName;
++    }
++
++    public int getItemDamage () {
++        return itemDamage;
++    }
++
++    public int getItemID () {
++        return itemID;
++    }
++
++    //Konstruktor
++    public Item (String itemNameK, int itemDamageK) {
++        this.itemName = itemNameK;
++
++        if (itemDamageK <= 0 && itemDamageK >= 100) {
++            itemDamageK = (int) Math.random();
++            this.itemDamage = itemDamageK;
++        } else {
++            this.itemDamage = itemDamageK;
++        }
++
++        this.itemID = itemIDCounter;
++        itemIDCounter++;
++    }
++
++    public void printInfo() {
++        System.out.println("Item: " + itemName);
++        System.out.println("Item Damage: " + itemDamage);
++        System.out.println("Item ID: " + itemID);
++    }
++
++
++}
+Index: src/hero/main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/hero/main.java b/src/hero/main.java
+new file mode 100644
+--- /dev/null	
++++ b/src/hero/main.java	
+@@ -0,0 +1,7 @@
++package hero;
++
++public class main {
++    public static void main(String[] args) {
++
++    }
++}
+Index: src/hero/Test.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/hero/Test.java b/src/hero/Test.java
+new file mode 100644
+--- /dev/null	
++++ b/src/hero/Test.java	
+@@ -0,0 +1,25 @@
++package hero;
++
++public class Test {
++    public static void main(String[] args) {
++        Hero JohnCena = new Hero("John Cena", 100, 50);
++        JohnCena.printInfo();
++
++        System.out.println("");
++
++        Hero TheRock = new Hero("The Rock", 100, 50);
++        TheRock.printInfo();
++
++        System.out.println("");
++
++        Item BingChilling = new Item("Bing Chilling", 69);
++
++        System.out.println("");
++
++        Item HeBeCooking = new Item("Can you smell what The Rock is cooking?", 50);
++
++        System.out.println("");
++
++        Arena.fight(JohnCena, TheRock);
++    }
++}
+Index: src/hero/Arena.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/hero/Arena.java b/src/hero/Arena.java
+new file mode 100644
+--- /dev/null	
++++ b/src/hero/Arena.java	
+@@ -0,0 +1,57 @@
++package hero;
++
++public class Arena {
++    private static boolean hero1FirstAttacker;
++    public static void fightRound(Hero hero1, Hero hero2) {
++        if (hero1FirstAttacker) {
++            hero2.attackEquipped(hero1);
++            System.out.println(hero2.getName() + " has attacked " + hero1.getName() + " with " + hero2.getEquippedDamage()
++            + " damage. " + hero1.getName() + " has " + hero1.getHealth() + " health left.");
++            System.out.println("");
++        } else {
++            hero1.attackEquipped(hero2);
++            System.out.println(hero1.getName() + " has attacked " + hero2.getName() + " with " + hero1.getEquippedDamage()
++            + " damage. " + hero2.getName() + " has " + hero2.getHealth() + " health left.");
++            System.out.println("");
++        }
++    }
++
++    public static Hero fight(Hero hero1, Hero hero2) {
++        double coinFlip = Math.random();
++
++        //erste Rundenankündigung
++        int round1 = 1;
++        System.out.println("Round: " + round1);
++
++        //coinFlip entscheidet ersten Angreifer
++        if (coinFlip >= 0 && coinFlip < 0.5) {
++            hero1FirstAttacker = true;
++            hero1.attackEquipped(hero2);
++            System.out.println(hero1.getName() + " has attacked " + hero2.getName() + " with " + hero1.getEquippedDamage()
++            + " damage. " + hero2.getName() + " has " + hero2.getHealth() + " health left.");
++            System.out.println("");
++        } else {
++            hero1FirstAttacker = false;
++            hero2.attackEquipped(hero1);
++            System.out.println(hero2.getName() + " has attacked " + hero1.getName() + " with " + hero2.getEquippedDamage()
++            + " damage. " + hero1.getName() + " has " + hero1.getHealth() + " health left.");
++            System.out.println("");
++        }
++
++        for (int round = 2; hero1.getHealth() >= 0 && hero2.getHealth() >= 0; round++) {
++            //Rundenankündigung
++            System.out.println("Round: " + round);
++
++            fightRound(hero1, hero2);
++
++            //Prüfen der Lebenspunkte
++            if (hero1.getHealth() <= 0) {
++                return hero2;
++            }
++
++            if (hero2.getHealth() <= 0) {
++                return hero1;
++            }
++        } return null;
++    }
++}
+Index: src/other/Sum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/other/Sum.java b/src/other/Sum.java
+new file mode 100644
+--- /dev/null	
++++ b/src/other/Sum.java	
+@@ -0,0 +1,14 @@
++package other;
++
++public class Sum {
++    public static void main(String[] args) {
++        int a = 10;
++        int b = 5;
++        int sum = a * b;
++
++        double c = 5.0;
++        double d = sum / c;
++        d += 7;
++        System.out.println(d);
++    }
++}
+\ No newline at end of file
+Index: src/other/Power.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/other/Power.java b/src/other/Power.java
+new file mode 100644
+--- /dev/null	
++++ b/src/other/Power.java	
+@@ -0,0 +1,14 @@
++package other;
++
++public class Power {
++    public static void main(String [] args){
++        double x = 2;
++        int n = 5;
++        double result = 0;
++
++        for (int i = 0; i < n; i++) {
++            result *= x;
++        }
++        System.out.println("x^n betraegt: " + result);
++    }
++}
+Index: src/other/Vec2D.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/other/Vec2D.java b/src/other/Vec2D.java
+new file mode 100644
+--- /dev/null	
++++ b/src/other/Vec2D.java	
+@@ -0,0 +1,30 @@
++package other;
++
++public class Vec2D {
++    //Attribute
++    double x;
++    double y;
++
++    //Konstruktor1
++    public Vec2D() {
++    }
++
++    //Konstruktor2
++    public Vec2D(double x, double y) {
++        this.x = x;
++        this.y = y;
++
++        if (x == 0 && y == 0) {
++
++        }
++    }
++
++
++
++
++
++
++    public static void main(String [] args){
++
++    }
++}
+Index: src/other/Changer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/other/Changer.java b/src/other/Changer.java
+new file mode 100644
+--- /dev/null	
++++ b/src/other/Changer.java	
+@@ -0,0 +1,17 @@
++package other;
++
++public class Changer {
++    public static void main(String [] args){
++        int[] data = {3, 2, 8, 5, 9, 1};
++        int position = 0;
++
++        for (int number : data) {
++            if (number % 2 != 0) {
++                data[position] *= 2;
++                position++;
++            } else {
++                position++;
++            }
++        }
++    }
++}
+Index: src/other/MaxSearch_L.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/other/MaxSearch_L.java b/src/other/MaxSearch_L.java
+new file mode 100644
+--- /dev/null	
++++ b/src/other/MaxSearch_L.java	
+@@ -0,0 +1,41 @@
++package other;
++
++public class MaxSearch_L {
++    // maine -> main
++    // String -> String[]
++    public static void main(String[] args) {
++
++        // 4.5 -> 4
++        int[] values = {13, 8, 23, 4, 1, 8, 6, 23, 48, 39};
++        int maxValue = values[0];
++
++        // integer -> int
++        // missing ;
++        int i = 1;
++
++        int n = values.length;
++
++        while (i < n) {
++            if (values[i] > maxValue) {
++                maxValue = values[i];
++            }
++
++            // i + 1 -> i = i + 1
++            // missing ;
++            i = i + 1;
++        }
++
++        // System.println -> System.out.println
++        System.out.println(maxValue);
++
++        final int months = 12;
++
++        // / 0 -> / months
++        int maxValuePerMonth = maxValue / months;
++
++        // missing +
++        System.out.println("Max. value per month: " + maxValuePerMonth);
++
++    }   // closing curly braces of main method and class
++}
++
+Index: src/other/ArrayComputations.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/other/ArrayComputations.java b/src/other/ArrayComputations.java
+new file mode 100644
+--- /dev/null	
++++ b/src/other/ArrayComputations.java	
+@@ -0,0 +1,13 @@
++package other;
++
++public class ArrayComputations {
++    public static void main(String[] args){
++        short [] numbers = {6, 2, 7, 9, 10, 54, 129, 0, 420};
++        System.out.println(numbers[0] < numbers[numbers.length - 1]);
++
++        boolean [] checks = {numbers[0] == (numbers[1] + numbers[2]), numbers[1] == (numbers[2] + numbers[3]), numbers[2] == (numbers[3] + numbers[4])};
++        System.out.println(checks[0]);
++        System.out.println(checks[1]);
++        System.out.println(checks[2]);
++    }
++}
+Index: src/Main.java
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+deleted file mode 100644
+--- a/src/Main.java	
++++ /dev/null	
+@@ -1,17 +0,0 @@
+-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
+-// then press Enter. You can now see whitespace characters in your code.
+-public class Main {
+-    public static void main(String[] args) {
+-        // Press Alt+Eingabe with your caret at the highlighted text to see how
+-        // IntelliJ IDEA suggests fixing it.
+-        System.out.printf("Hello and welcome!");
+-
+-        // Press Umschalt+F10 or click the green arrow button in the gutter to run the code.
+-        for (int i = 1; i <= 5; i++) {
+-
+-            // Press Umschalt+F9 to start debugging your code. We have set one breakpoint
+-            // for you, but you can always add more by pressing Strg+F8.
+-            System.out.println("i = " + i);
+-        }
+-    }
+-}
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/misc.xml	
+@@ -0,0 +1,5 @@
++<project version="4">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
++    <output url="file://$PROJECT_DIR$/out" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+--- /dev/null	
++++ b/.idea/.gitignore	
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/modules.xml	
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/FAU Informatik - GdP.iml" filepath="$PROJECT_DIR$/FAU Informatik - GdP.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/uiDesigner.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/uiDesigner.xml b/.idea/uiDesigner.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/uiDesigner.xml	
+@@ -0,0 +1,124 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Palette2">
++    <group name="Swing">
++      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
++      </item>
++      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.svg" removable="false" auto-create-binding="false" can-attach-label="true">
++        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
++        <initial-values>
++          <property name="text" value="Button" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="RadioButton" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="CheckBox" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="Label" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
++          <preferred-size width="-1" height="20" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
++      </item>
++    </group>
++  </component>
++</project>
+\ No newline at end of file
+Index: FAU Informatik - GdP.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/FAU Informatik - GdP.iml b/FAU Informatik - GdP.iml
+new file mode 100644
+--- /dev/null	
++++ b/FAU Informatik - GdP.iml	
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
